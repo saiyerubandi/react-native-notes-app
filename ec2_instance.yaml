@@ -19,7 +19,7 @@ Resources:
           sudo apt update -y
           sudo apt install -y nodejs npm
           sudo npm install -g pm2
-          git clone https://github.com/<your-github-username>/react-native-notes-app.git /home/ubuntu/app
+          git clone https://github.com/saiyerubandi/react-native-notes-app.git /home/ubuntu/app
           cd /home/ubuntu/app
           npm install
           pm2 start App.js --name react-native-notes
