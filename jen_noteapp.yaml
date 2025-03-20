@@ -19,6 +19,39 @@ Resources:
           FromPort: 8080
           ToPort: 8080
           CidrIp: 0.0.0.0/0  
+          
+  JenkinsInstanceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: JenkinsEC2Role
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Policies:
+        - PolicyName: JenkinsEC2Policy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:*
+                  - cloudformation:*
+                  - ec2:*
+                  - logs:*
+                  - iam:PassRole
+                Resource: "*"
+  
+  JenkinsInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Roles:
+        - !Ref JenkinsInstanceRole
 
   JenkinsInstance:
     Type: AWS::EC2::Instance
@@ -26,6 +59,7 @@ Resources:
       InstanceType: t3.medium
       ImageId: ami-0c55b159cbfafe1f0 # Here I taken Ubuntu image
       KeyName: my-key-pair
+      IamInstanceProfile: !Ref JenkinsInstanceProfile
       SecurityGroupIds:
         - !Ref NotesAppSecurityGroup
       Tags:
