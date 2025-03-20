@@ -1,0 +1,71 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "CloudFormation template to deploy Jenkins and React Native Notes App on servers (AWs EC2 Instances) "
+
+Resources:
+  NotesAppSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: "Allow SSH, Jenkins, and App Traffic"
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0  
+        - IpProtocol: tcp
+          FromPort: 3000
+          ToPort: 3000
+          CidrIp: 0.0.0.0/0  
+        - IpProtocol: tcp
+          FromPort: 8080
+          ToPort: 8080
+          CidrIp: 0.0.0.0/0  
+
+  JenkinsInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t3.medium
+      ImageId: ami-0c55b159cbfafe1f0 # Here I taken Ubuntu image
+      KeyName: my-key-pair
+      SecurityGroupIds:
+        - !Ref NotesAppSecurityGroup
+      Tags:
+        - Key: Name
+          Value: JenkinsServer
+      UserData:
+        Fn::Base64: |
+          #!/bin/bash
+          sudo apt update -y
+          sudo apt install -y openjdk-11-jdk awscli git nodejs npm nginx
+          curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo tee \
+            /usr/share/keyrings/jenkins-keyring.asc > /dev/null
+          echo "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
+            https://pkg.jenkins.io/debian-stable binary/" | sudo tee \
+            /etc/apt/sources.list.d/jenkins.list > /dev/null
+          sudo apt update -y
+          sudo apt install -y jenkins
+          sudo systemctl enable jenkins
+          sudo systemctl start jenkins
+          sudo ufw allow 8080
+          echo "Jenkins setup complete!"
+
+  NotesAppInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t3.micro
+      ImageId: ami-0c55b159cbfafe1f0 #Here I taken Ubuntu image
+      KeyName: my-key-pair
+      SecurityGroupIds:
+        - !Ref NotesAppSecurityGroup
+      Tags:
+        - Key: Name
+          Value: ReactNativeNotesApp
+      UserData:
+        Fn::Base64: |
+          #!/bin/bash
+          sudo apt update -y
+          sudo apt install -y nodejs npm
+          sudo npm install -g expo-cli pm2
+          git clone https://github.com/saiyerubandi/react-native-notes-app.git
+          cd react-native-notes-app
+          npm install
+          pm2 start "npx expo start --tunnel"
