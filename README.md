@@ -1,117 +1,96 @@
-# React Native Notes App
+**React Native Notes App - CI/CD Pipeline Deployment**
 
-A notes app built using React native for cross-platform mobile devices.
+ Worked on project that sets up a CI/CD pipeline using Jenkins to deploy a React Native Notes App to an AWS EC2 instance following GitOps principles. The pipeline automates:
 
-## Table of Contents
+Code repository updates: Triggering the pipeline on code push.
 
-- [Features](#features)
-- [Tools and Technologies](#tools-and-technologies)
-- [Prerequisites](#prerequisites)
-- [Installation and setup](#installation-and-setup)
-- [Contributing](#contributing)
-- [Useful Links](#useful-links)
-- [Contact](#contact)
+Infrastructure provisioning: Deploying an EC2 instance via AWS CloudFormation.
 
-## Features
+Application deployment: Installing dependencies and running the app.
 
-### User-oriented features
+**Technologies**
 
-- Create notes
-- View notes
-- Update notes
-- Select multiple notes
-- Delete notes
-- Search notes
-- Sort notes
-- Copy notes
-- Share notes
-- Clone notes
-- Pin notes
-- Bookmark notes
-- Color notes
-- Add labels to notes
-- Add reminders to notes
+CI/CD Tool: Jenkins
 
-### Developer-oriented features
+Infrastructure Provisioning: AWS CloudFormation
 
-- Android ripple effect
-- Conditional addition of property to object (JS concept)
-- Custom Back button handlers
-- Custom header when notes are in selected state
-- Delete confirmation
-- Global state for notes using React's context
-- Multiple notes can be selected using "long pressing" a note (feature desirable in mobile devices)
-- Persisting taps on notes while keyboard input is active
-- Use of async storage library for storing notes data in user's device
-- Use of React hooks
-- Use of React navigation library for making multiple screens
-- Use of ScrollView for scrollable components
-- Use of Toast in android
+Application Hosting: AWS EC2 (Ubuntu)
 
-## Tools and Technologies
+Build & Deployment: Node.js + PM2
 
-- React
-- React Native
-- CSS
-- Eslint
 
-## Prerequisites
+**Ensure you have the following setup:**
 
-- Node.js
-- A code editor (preferably VS Code)
+AWS Account with permissions to manage EC2 and CloudFormation.
 
-## Installation and Setup
+Jenkins Server with AWS CLI and SSH plugin installed.
 
-1. Install all the dependencies and dev-dependencies
+GitHub Account with a forked repository.
 
-   ```sh
-   npm install
-   ```
+EC2 SSH Key added to Jenkins (ec2-ssh-key).
 
-2. Start the application
+AWS Credentials stored in Jenkins (aws-credentials).
 
-   ```sh
-   npm start
-   ```
 
-3. Download expo app on the mobile device and scan the QR code generated on terminal.
-4. For running on browser, press w on terminal and it will launch the browser.
+**Steps to Deploy**
 
-## Contributing
+1. Fork the Repository
 
-- Feature Requests:  
-  Want a new feature or improve already existing feature in the app? Feel free to create an issue at [issue tracker](https://github.com/aayush301/react-native-notes-app/issues) about the feature you want to see in the app.
-- Bug reports:  
-  Found a bug in the application? Feel free to create a new issue at [issue tracker](https://github.com/aayush301/react-native-notes-app/issues) stating the clear description of the bug.
+Fork this repository into your GitHub account.
 
-- Code contributions:  
-  Want to contribute code to the project? You can do so by either correcting bugs or adding new features which can be found in the issues tab and then submitting a Pull Request referencing that issue.
+2. Configure AWS Credentials in Jenkins
 
-- Security vulnerabilities:  
-  Discovered a security vulnerability within this project? Please send an email to Aayush (author) at aayush5521186@gmail.com.
+Navigate to Jenkins → Manage Jenkins → Credentials.
 
-## Useful Links
+Add AWS credentials (aws-credentials).
 
-- This project
+Add EC2 SSH private key (ec2-ssh-key).
 
-  - Github Repo: https://github.com/aayush301/react-native-notes-app
+3. Set Up Jenkins Pipeline
 
-- Official Docs
+Create a New Pipeline Job
 
-  - Reactjs docs: https://reactjs.org/docs/getting-started.html
-  - npmjs docs: https://docs.npmjs.com/
-  - Github docs: https://docs.github.com/en/get-started/quickstart/hello-world
+Go to Jenkins Dashboard → New Item → Pipeline.
 
-- Download links
+Under Pipeline Definition, select Pipeline script from SCM.
 
-  - Nodejs download: https://nodejs.org/
-  - VS Code download: https://code.visualstudio.com/
+Set Repository URL to your forked GitHub repo.
 
-- Cheatsheets
-  - Git cheatsheet: https://education.github.com/git-cheat-sheet-education.pdf
-  - VS Code keyboard shortcuts: https://code.visualstudio.com/shortcuts/keyboard-shortcuts-windows.pdf
+Set Branch to main.
 
-## Contact
+Click Save & Build Now.
 
-- Email: aayush5521186@gmail.com
-- Linkedin: https://www.linkedin.com/in/aayush12/
+4. Jenkinsfile - CI/CD Pipeline
+
+The Jenkinsfile automates the following steps:
+
+5. Infrastructure as Code (CloudFormation)
+
+The ec2-instance.yaml provisions an EC2 instance for the application.
+
+6. Trigger and Verify Deployment
+
+Push code changes to GitHub, which triggers Jenkins pipeline.
+
+Jenkins deploys the EC2 instance and the application.
+
+Check the running application on your EC2 public IP.
+
+7. Access the Application
+
+Get the EC2 Public IP from Jenkins logs or AWS Console.
+
+SSH into the instance:
+
+Check running processes:
+
+Open the application in a browser at:
+
+Submission
+
+Pushed all the changes (Jenkinsfile, ec2_instance.yaml, and README.md) to GitHub repository, kindly find respective files.
+
+
+Conclusion
+
+This setup ensures a fully automated CI/CD pipeline, utilizing GitOps principles with Jenkins, AWS CloudFormation, and Node.js for deploying a React Native Notes App.
